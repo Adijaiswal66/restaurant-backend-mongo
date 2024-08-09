@@ -13,8 +13,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     @Query("select r from Restaurant r where r.name = :name")
     public Optional<Restaurant> getRestaurantByName(@Param("name") String name);
 
-    @Query("select r from Restaurant r where r.id = :id")
-    public Optional<Restaurant> getRestaurantById(@Param("id") long id);
+    @Query("select r from Restaurant r where r.name = :name")
+    public Restaurant getRestaurantByName1(@Param("name") String name);
 
     @Query("SELECT r, (6371000 * acos(cos(radians(:latitude)) * cos(radians(r.latitude)) * cos(radians(r.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(r.latitude)))) AS distance " +
             "FROM Restaurant r " +

@@ -5,15 +5,17 @@ import com.example.demo.entity.Restaurant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private RestaurantRepository restaurantRepository;
@@ -22,6 +24,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         Optional<Restaurant> existingRestaurant = this.restaurantRepository.getRestaurantByName(restaurant.getName());
         if (existingRestaurant.isEmpty()) {
             try {
+                restaurant.setPassword(passwordEncoder.encode(restaurant.getPassword()));
                 this.restaurantRepository.save(restaurant);
                 return new ResponseEntity<>("Restaurant is added", HttpStatus.OK);
             } catch (Exception e) {
@@ -59,6 +62,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                         u -> {
                             u.setId(existingRestaurant.get().getId());
                             u.setName(restaurant.getName());
+                            u.setPassword(existingRestaurant.get().getPassword());
                             u.setDescription(restaurant.getDescription());
                             u.setLongitude(restaurant.getLongitude());
                             u.setLatitude(restaurant.getLatitude());

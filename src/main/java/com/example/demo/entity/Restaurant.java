@@ -1,42 +1,26 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@Document(collection = "restaurants")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
 public class Restaurant {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
+    private String id;
     private String name;
-    private String password;
-
     private String description;
 
-    private double latitude;
-    private double longitude;
+    @GeoSpatialIndexed
+    private double[] location; // [longitude, latitude]
 
-    private List<Integer> ratings = new ArrayList<>();
+    private List<Double> ratings; // List of ratings
 
-    public double getAverageRating() {
-        if (ratings.isEmpty()) {
-            return 0.0;
-        }
-        return ratings.stream().mapToInt(Integer::intValue).average().orElse(0.0);
-    }
 }
